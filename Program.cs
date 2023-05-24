@@ -5,8 +5,17 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.Write("Введите путь до папки:");
-        string folderPath = Console.ReadLine();
+        var folderPath = string.Empty;
+
+        if (args.Length > 0)
+        {
+            folderPath = args[0];
+        }
+        else
+        {
+            Console.Write("Введите путь до папки:");
+            folderPath = Console.ReadLine();
+        }
 
         try
         {
@@ -31,10 +40,10 @@ class Program
 
     static void CleanFolder(string folderPath)
     {
-        DirectoryInfo directory = new DirectoryInfo(folderPath);
+        var directory = new DirectoryInfo(folderPath);
 
         /// Обрабатываем файлы в текущей папке
-        foreach (FileInfo file in directory.GetFiles())
+        foreach (var file in directory.GetFiles())
         {
             if (file.LastWriteTime < DateTime.Now.Subtract(TimeSpan.FromMinutes(30)))
             {
@@ -43,12 +52,12 @@ class Program
         }
 
         /// Обрабатываем подпапки рекурсивно
-        foreach (DirectoryInfo subDirectory in directory.GetDirectories())
+        foreach (var subDirectory in directory.GetDirectories())
         {
             CleanFolder(subDirectory.FullName);
         }
 
-        // Удаляем текущую папку, если она пустая
+        /// Удаляем текущую папку, если она пустая
         if (directory.GetFiles().Length == 0 && directory.GetDirectories().Length == 0)
         {
             directory.Delete();
